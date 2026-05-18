@@ -3,7 +3,7 @@ signal level_completed
 
 func _ready() -> void:
 	if has_node("HUD"):
-		$HUD.setup_level(1)
+		$HUD.setup_level(3)
 
 func game_over():
 	$HUD.show_game_over()

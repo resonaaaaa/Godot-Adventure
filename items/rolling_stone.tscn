@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://cagqn8v8hmdy6"]
+
+[ext_resource type="Script" uid="uid://dgb5cc7e1c0pw" path="res://items/rolling_stone.gd" id="1_7dtul"]
+[ext_resource type="Texture2D" uid="uid://cptu5g8hrebkc" path="res://asset/Items/rolling_stone.png" id="1_f1m2t"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_7dtul"]
+friction = 0.5
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7dtul"]
+radius = 95.005264
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f1m2t"]
+radius = 102.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2gylv"]
+size = Vector2(51, 579.5)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2gylv"]
+particle_flag_disable_z = true
+emission_shape = 1
+emission_sphere_radius = 79.48
+angle_min = -75.99999
+angle_max = 128.30002
+radial_velocity_min = 79.99998
+radial_velocity_max = 118.809975
+gravity = Vector3(0, 98, 0)
+tangential_accel_min = -2.2351742e-06
+tangential_accel_max = -2.2351742e-06
+damping_min = 7.9210005
+damping_max = 21.452002
+scale_min = 5.0
+scale_max = 8.0
+
+[node name="RollingStone" type="RigidBody2D" unique_id=2114042483]
+physics_material_override = SubResource("PhysicsMaterial_7dtul")
+script = ExtResource("1_7dtul")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=257131791]
+texture = ExtResource("1_f1m2t")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=1412273675]
+visible = false
+position = Vector2(-4, 1)
+shape = SubResource("CircleShape2D_7dtul")
+
+[node name="Sensor" type="Area2D" parent="." unique_id=1965649856]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sensor" unique_id=1115102087]
+visible = false
+position = Vector2(-4, 0)
+shape = SubResource("CircleShape2D_f1m2t")
+debug_color = Color(0.7540487, 0.4112621, 0.5353434, 0.41960785)
+
+[node name="Trigger" type="Area2D" parent="." unique_id=1608189050]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Trigger" unique_id=18993730]
+position = Vector2(-888, 408)
+shape = SubResource("RectangleShape2D_2gylv")
+debug_color = Color(0.6431373, 0.75686276, 0.29411766, 0.41960785)
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1331761547]
+modulate = Color(0.5009476, 0.46052113, 0.4504145, 0.99215686)
+emitting = false
+amount = 40
+one_shot = true
+speed_scale = 3.0
+process_material = SubResource("ParticleProcessMaterial_2gylv")
+
+[connection signal="body_entered" from="Sensor" to="." method="_on_sensor_body_entered"]
+[connection signal="body_entered" from="Trigger" to="." method="set_stone_active"]

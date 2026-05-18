@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bp0dfk2x2hbky"]
 
-[ext_resource type="Texture2D" uid="uid://bberfd26jwv6r" path="res://asset/fire_particle.png" id="1_jmdgh"]
+[ext_resource type="Texture2D" uid="uid://bberfd26jwv6r" path="res://asset/Items/fire_particle.png" id="1_jmdgh"]
 [ext_resource type="Texture2D" uid="uid://d0x08nkjuoybg" path="res://asset/TileSet/Other/fluidRed_top.png" id="2_hicjh"]
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hicjh"]

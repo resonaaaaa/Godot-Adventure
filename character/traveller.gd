@@ -25,6 +25,8 @@ func _ready() -> void:
 	start_position = position
 
 func _physics_process(delta: float) -> void:
+	if interact_cooldown > 0:
+		interact_cooldown -= delta
 	if player_in_range or DialogManager.is_dialog_active():
 		anim.play("stay")
 	else:

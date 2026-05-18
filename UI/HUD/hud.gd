@@ -57,11 +57,7 @@ func setup_level(level_num: int):
 	if level_num == 1:
 		$RedKeyUI.show()
 		$GreenKeyUI.hide()
-	elif level_num == 2:
-		$RedKeyUI.show()
-		$GreenKeyUI.show()
-
-	elif level_num == 3:
+	else:
 		$RedKeyUI.show()
 		$GreenKeyUI.show()
 

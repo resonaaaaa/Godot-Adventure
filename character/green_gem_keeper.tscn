@@ -89,10 +89,7 @@ animations = [{
 "name": &"cure",
 "speed": 8.0
 }, {
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("5_mp3xp")
-}],
+"frames": [],
 "loop": true,
 "name": &"hurt",
 "speed": 5.0
@@ -111,7 +108,7 @@ radius = 15.0
 height = 48.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ad8e4"]
-size = Vector2(178, 8)
+size = Vector2(178, 6.5)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wbiod"]
 content_margin_left = 9.0
@@ -147,8 +144,6 @@ player_portrait = ExtResource("3_ad8e4")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=656519510]
 sprite_frames = SubResource("SpriteFrames_0srrn")
 animation = &"cure"
-frame = 12
-frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=507618977]
 visible = false
@@ -157,7 +152,7 @@ shape = SubResource("CapsuleShape2D_n4m1t")
 [node name="sensor" type="Area2D" parent="." unique_id=1328388229]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="sensor" unique_id=1708245873]
-position = Vector2(0, 25)
+position = Vector2(0, 21.25)
 shape = SubResource("RectangleShape2D_ad8e4")
 debug_color = Color(0.7926399, 0.3610132, 0.59901243, 0.41960785)
 

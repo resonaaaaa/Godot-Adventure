@@ -322,7 +322,7 @@ func get_gem(gem_type: String) -> void:
 		"red":
 			has_red_gem = true
 			red_gem_magic_unlocked = true
-			DialogManager.show_dialogue(["你在红宝石中感知到了炽热的魔力，但你不知道该如何利用它的能量。"], null, "获得红宝石")
+			DialogManager.show_dialogue(["你在红宝石中感知到了炽热的魔力，它的能量正在逐渐进入你的身体。","现在你能够按下F键向前发射火球了！"], null, "获得红宝石")
 		"green":
 			has_green_gem = true
 			green_gem_magic_unlocked = true
@@ -335,7 +335,7 @@ func get_gem(gem_type: String) -> void:
 		"yellow":
 			has_yellow_gem = true
 			yellow_gem_magic_unlocked = true
-			DialogManager.show_dialogue(["你在黄宝石中感知到了坚韧的魔力，它的能量正在逐渐进入你的身体。", "现在你可以按下T键使用魔法护盾了！护盾持续时间为5秒，冷却时间为30秒。"], null, "获得黄宝石")
+			DialogManager.show_dialogue(["你在黄宝石中感知到了坚韧的魔力。", "但你不知道该如何使用它。"], null, "获得黄宝石")
 	
 #================================
 #尖刺相关
@@ -413,11 +413,13 @@ func _on_animation_finished() -> void:
 #推箱子相关
 
 func _apply_push_to_rigidbodies(delta: float) -> void:
+	var pushed_bodies = []
 	var slide_count = get_slide_collision_count()
 	for i in range(slide_count):
 		var collision = get_slide_collision(i)
 		var body = collision.get_collider()
-		if body is RigidBody2D:
+		if body is RigidBody2D and body not in pushed_bodies:
+			pushed_bodies.append(body)
 			var input_dir = Input.get_axis("move_left", "move_right")
 			if input_dir == 0.0:
 				continue
@@ -425,8 +427,9 @@ func _apply_push_to_rigidbodies(delta: float) -> void:
 			if collision.get_normal().y < -0.6:
 				continue
 			var push_dir = Vector2(sign(input_dir), 0.0)
-			#施加冲力
-			body.apply_central_impulse(push_dir * push_force * delta)
+			#施加冲力，并且限制最大速度以防因为多点碰撞或连续受力导致加速过快
+			if abs(body.linear_velocity.x) < speed:
+				body.apply_central_impulse(push_dir * push_force * delta)
 
 #===============================
 #平台移动相关
