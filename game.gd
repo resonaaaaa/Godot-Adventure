@@ -2,7 +2,9 @@ extends Node
 
 @export var level_paths: PackedStringArray = [
 	"res://Level1/Level1.tscn",
-	"res://Level2/level2.tscn"
+	"res://Level2/level2.tscn",
+	"res://Level3/Level3.tscn",
+	"res://Level4/Level4.tscn"
 ]
 @export var loading_scene_path := "res://loading.tscn"
 
@@ -71,10 +73,9 @@ func _reset_player_properties(level: Node) -> void:
 	var player := level.get_node_or_null("Player")
 	if player == null:
 		return
-	if player.has_method("set_has_key"):
-		player.set_has_key(false)
-	else:
-		player.set("has_key", false)
+	if player.has_method("set_has_key_red"):
+		player.set_has_key_red(false)
+		player.set_has_key_green(false)
 
 func _show_loading() -> Node:
 	if loading_scene_path.is_empty():

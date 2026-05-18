@@ -1,0 +1,153 @@
+extends CanvasLayer
+signal new_game
+
+var key_texture_empty = preload("res://asset/TileSet/Items/outlineKey.png")
+var key_texture_red = preload("res://asset/TileSet/Items/keyRed.png")
+var key_texture_green = preload("res://asset/TileSet/Items/keyGreen.png")
+var flower_texture_red: Texture2D = preload("res://asset/TileSet/Items/redCrystal.png")
+var flower_texture_blue = preload("res://asset/TileSet/Items/blueCrystal.png")
+var flower_texture_empty = preload("res://asset/Tileset/Items/outlineCrystal.png")
+
+@onready var _red_flower_ui: Sprite2D = $RedFlowerUI
+@onready var _blue_flower_ui: Sprite2D = $BlueFlowerUI
+
+func _ready() -> void:
+	$PauseMenu.hide()
+	$PauseMessage.hide()
+	$PauseButton.button_pressed = false
+
+
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("menu"):
+		$PauseButton.button_pressed = not $PauseButton.button_pressed
+
+func show_game_over():
+	show_message("GAME OVER")
+	await $MessageTimer.timeout
+	get_tree().reload_current_scene()
+	show_new_game()
+
+func show_game_win():
+	show_message("You Win!")
+
+
+func show_new_game():
+	$Message.text = "Adventure"
+	$Message.show()
+	$StartButton.show()
+	$RedKeyUI.texture = key_texture_empty
+	$GreenKeyUI.texture = key_texture_empty
+
+func show_message(text):
+	$Message.text = text
+	$Message.show()
+	$MessageTimer.start()
+	
+func _on_start_button_pressed() -> void:
+	# 隐藏按钮和消息
+	$StartButton.hide()
+	$Message.hide()
+	new_game.emit()
+
+func setup_level(level_num: int):
+	$RedKeyUI.texture = key_texture_empty
+	$GreenKeyUI.texture = key_texture_empty
+	$RedFlowerUI.hide()
+	$BlueFlowerUI.hide()
+	if level_num == 1:
+		$RedKeyUI.show()
+		$GreenKeyUI.hide()
+	else:
+		$RedKeyUI.show()
+		$GreenKeyUI.show()
+
+#================================
+#拾取物UI更新
+func show_red_key_ui():
+	$RedKeyUI.texture = key_texture_red
+
+func show_green_key_ui():
+	$GreenKeyUI.texture = key_texture_green
+
+func show_flower_ui():
+	$RedFlowerUI.show()
+	$BlueFlowerUI.show()
+
+func set_red_flower_ui():
+	$RedFlowerUI.texture = flower_texture_red
+
+func set_blue_flower_ui():
+	$BlueFlowerUI.texture = flower_texture_blue
+
+#================================
+#暂停菜单设置相关
+
+#检测暂停状态是否切换
+func _on_pause_button_toggled(toggled_on: bool) -> void:
+	var tree = get_tree()
+	tree.paused = toggled_on
+	if toggled_on:
+		$PauseMessage.show()
+		$PauseMenu.popup_centered()
+	else :
+		$PauseMessage.hide()
+		$PauseMenu.hide()
+
+#隐藏暂停菜单时同步恢复游戏状态
+func _on_pause_menu_popup_hide() -> void:
+	if $PauseButton.button_pressed:
+		$PauseButton.button_pressed = false
+	get_tree().paused = false
+	$PauseMessage.hide()
+
+func _on_pause_button_mouse_entered() -> void:
+	$PauseText.show()
+
+func _on_pause_button_mouse_exited() -> void:
+	$PauseText.hide()
+
+#继续游戏
+func _on_continue_button_pressed() -> void:
+	get_tree().paused = false
+	$PauseMessage.hide()
+	$PauseMenu.hide()
+
+
+func _on_restart_button_pressed() -> void:
+	var tree = get_tree()
+	if tree.paused:
+		tree.paused = false
+	$PauseButton.button_pressed = false
+	$PauseMessage.hide()
+	$PauseMenu.hide()
+	$PauseText.hide()
+	call_deferred("_reload_scene")
+
+func _reload_scene() -> void:
+	get_tree().reload_current_scene()
+
+#================================
+#设置菜单相关
+
+#打开设置菜单
+func _on_setting_button_pressed() -> void:
+	$PauseMenu.hide()
+	$SettingPanel.popup_centered()
+
+#关闭设置菜单，返回暂停菜单
+func _on_setting_close_button_pressed() -> void:
+	$SettingPanel.hide()
+	$PauseMenu.popup_centered()
+
+#恢复默认设置
+func _on_setting_default_button_pressed() -> void:
+	var audio_tab = $SettingPanel/TabContainer/音频
+	audio_tab.get_node("MuteCheckBox").button_pressed = false
+	audio_tab.get_node("MasterVolume/HSlider").value = 50.0
+	audio_tab.get_node("MusicVolume/HSlider").value = 50.0
+	audio_tab.get_node("SFXVolume/HSlider").value = 50.0
+	audio_tab.get_node("UIVolume/HSlider").value = 50.0
+	
+	var graphics_tab = $SettingPanel/TabContainer/画面
+	graphics_tab.get_node("Resolution/OptionButton").selected = 0
+	graphics_tab.get_node("Fullscreen").button_pressed = false
